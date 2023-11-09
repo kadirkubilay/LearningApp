@@ -1,13 +1,14 @@
 from flask import Flask, render_template, request, redirect, url_for, session
 import openai
 import random
+import os
 
 
 # Initialize the Flask application
 app = Flask(__name__)
 app.secret_key = 'KADOKUBIERDEM'
 
-openai.api_key = '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'
+openai.api_key = os.environ.get("OPENAI_API_KEY")
 
 # Article content
 article = """
