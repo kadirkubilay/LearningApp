@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, session
 import openai
-
+import random
 
 
 # Initialize the Flask application
@@ -56,11 +56,25 @@ def index():
 def medium():
     if request.method == 'POST':
         module = request.form.get('module')
-        prompt = f"Given the module: '{module}' and article: '{article}', generate a question."
+
+
+        variations = [
+            "What is an intriguing question about",
+            "Can you come up with a challenging question concerning",
+            "I'd like to ask a thought-provoking question regarding",
+        ]
+
+
+        prompt_variation = random.choice(variations)
+
+        # Form the complete prompt using the chosen variation
+        prompt = f"{prompt_variation} the module: '{module}' and article: '{article}'?"
+
+
         response = openai.ChatCompletion.create(
             engine=deployment_name,
             messages=[{"role": "user", "content": prompt}],
-            temperature=0.2,
+            temperature=0.9,  # Use a higher temperature for more varied output
             max_tokens=200
         )
         question = response['choices'][0]['message']['content'].strip()
@@ -84,21 +98,6 @@ def result():
     )
     response_text = response['choices'][0]['message']['content'].strip()
     print("response_text")
-
-    # Extract rating
-    rating_start = response_text.find("--RatingStart--") + len("--RatingStart--")
-    rating_end = response_text.find("--RatingEnd--")
-    #if(response_text[0] == "1"):
-    #    rating = response_text.split('star ')
-    #else:
-    #    rating = response_text.split('stars ')
-    #print(rating)
-
-
-    # Extract suggestion
-    suggestion_start = response_text.find("--SuggestionStart--") + len("--SuggestionStart--")
-    suggestion_end = response_text.find("--SuggestionEnd--")
-    suggestions = response_text[suggestion_start:suggestion_end].strip()
 
 
     return render_template("ranking.html", answer=answer, rating=response_text[:7], suggestions=response_text[7:])
