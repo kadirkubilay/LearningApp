@@ -7,12 +7,7 @@ import random
 app = Flask(__name__)
 app.secret_key = 'KADOKUBIERDEM'
 
-# Configuration for OpenAI GPT-3 API
-openai.api_type = "azure"
-openai.api_key = "efcd932356db4aaa85e6ce9a15b99952"
-openai.api_base = "https://horsteastus2.openai.azure.com/" # your endpoint should look like the following https://YOUR_RESOURCE_NAME.openai.azure.com/openai.api_type = 'azure'
-openai.api_version = '2023-06-01-preview' # this might change in the future
-deployment_name= "HORST-GPT4"
+openai.api_key = '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'
 
 # Article content
 article = """
@@ -75,7 +70,7 @@ def medium():
 
 
         response = openai.ChatCompletion.create(
-            engine=deployment_name,
+            model="gpt-3.5-turbo",
             messages=[{"role": "user", "content": prompt}],
             temperature=0.9,  # Use a higher temperature for more varied output
             max_tokens=200
@@ -103,7 +98,7 @@ def result():
                      f"--SuggestionStart--\nSuggest a better answer than '{answer}' for question: '{question}' based on the article :{article}. "
                      f"\n--SuggestionEnd--")
     response = openai.ChatCompletion.create(
-        engine=deployment_name,
+        model="gpt-3.5-turbo",
         messages=[{"role": "user", "content": evaluation_prompt}],
         temperature=0.2,
         max_tokens=200
