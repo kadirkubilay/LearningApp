@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for, session
-from openai import OpenAI
+import openai
 
 
 
@@ -8,7 +8,7 @@ app = Flask(__name__)
 app.secret_key = 'KADOKUBIERDEM'
 
 # Configuration for OpenAI GPT-3 API
-OpenAI.api_key = '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'
+openai.api_key = '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'
 
 # Article content
 article = """
@@ -53,7 +53,7 @@ def medium():
     if request.method == 'POST':
         module = request.form.get('module')
         prompt = f"Given the module: '{module}' and article: '{article}', generate a question."
-        response = OpenAI.ChatCompletion.create(
+        response = openai.ChatCompletion.create(
             model="gpt-3.5-turbo",
             messages=[{"role": "user", "content": prompt}],
             temperature=0.2,
@@ -72,7 +72,7 @@ def result():
                      f"\n--RatingEnd--\n"
                      f"--SuggestionStart--\nSuggest a better answer than '{answer}' for question: '{question}' based on the article :{article}. "
                      f"\n--SuggestionEnd--")
-    response = OpenAI.Completion.create(
+    response = openai.Completion.create(
         model="davinci",
         prompt=evaluation_prompt,
         temperature=0.2,
