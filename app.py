@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, session
 import openai
-
+import random
 
 
 # Initialize the Flask application
@@ -52,21 +52,47 @@ def index():
             return redirect(url_for('medium'))
     return render_template('index.html')
 
+
+
+
 @app.route('/medium', methods=['GET', 'POST'])
 def medium():
     if request.method == 'POST':
         module = request.form.get('module')
-        prompt = f"Given the module: '{module}' and article: '{article}', generate a question."
+
+
+        variations = [
+            "What is an intriguing question about",
+            "Can you come up with a challenging question concerning",
+            "I'd like to ask a thought-provoking question regarding",
+        ]
+
+
+        prompt_variation = random.choice(variations)
+
+        # Form the complete prompt using the chosen variation
+        prompt = f"{prompt_variation} the module: '{module}' and article: '{article}'?"
+
+
         response = openai.ChatCompletion.create(
             engine=deployment_name,
             messages=[{"role": "user", "content": prompt}],
-            temperature=0.2,
+            temperature=0.9,  # Use a higher temperature for more varied output
             max_tokens=200
         )
+
+
         question = response['choices'][0]['message']['content'].strip()
+
+
         session['question'] = question
+
+
         return render_template('result.html', question=question)
+
+
     return render_template('medium.html')
+
 
 @app.route('/result', methods=['POST','GET'])
 def result():
