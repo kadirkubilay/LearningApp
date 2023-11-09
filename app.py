@@ -80,23 +80,28 @@ def result():
         engine=deployment_name,
         messages=[{"role": "user", "content": evaluation_prompt}],
         temperature=0.2,
-        max_tokens=100
+        max_tokens=200
     )
-    response_text = response['choices'][0]['text'].strip()
-
+    response_text = response['choices'][0]['message']['content'].strip()
+    print("response_text")
 
     # Extract rating
     rating_start = response_text.find("--RatingStart--") + len("--RatingStart--")
     rating_end = response_text.find("--RatingEnd--")
-    rating = response_text[rating_start:rating_end].replace("Rating (1 to 5 stars):", "").strip()
-    print(rating)
+    #if(response_text[0] == "1"):
+    #    rating = response_text.split('star ')
+    #else:
+    #    rating = response_text.split('stars ')
+    #print(rating)
+
 
     # Extract suggestion
     suggestion_start = response_text.find("--SuggestionStart--") + len("--SuggestionStart--")
     suggestion_end = response_text.find("--SuggestionEnd--")
     suggestions = response_text[suggestion_start:suggestion_end].strip()
 
-    return redirect(url_for('result'))
+
+    return render_template("ranking.html", answer=answer, rating=response_text[:7], suggestions=response_text[7:])
 
 
 
