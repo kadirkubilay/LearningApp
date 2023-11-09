@@ -5,7 +5,7 @@ import random
 
 # Initialize the Flask application
 app = Flask(__name__)
-#app.secret_key = 'KADOKUBIERDEM'
+app.secret_key = 'KADOKUBIERDEM'
 
 # Configuration for OpenAI GPT-3 API
 openai.api_type = "azure"
