@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+    <title>Ranking</title>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f7f9fc;
+            color: #333;
+            padding: 40px;
+            text-align: center;
+        }
+
+        img {
+            width: 120px;
+            margin-bottom: 30px;
+        }
+
+        table {
+            background: #fff;
+            border-collapse: collapse;
+            margin: 0 auto;
+            width: 80%;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        td {
+            padding: 15px;
+            font-size: 18px;
+            border-bottom: 1px solid #eee;
+        }
+
+        td:first-child {
+            color: #555;
+            font-weight: 500;
+        }
+
+        button {
+            margin-top: 30px;
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            margin-right: 10px;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+
+<body>
+    <img src="/static/logo.png" alt="Logo" />
+    <table>
+        <tr>
+            <td>My Answer:</td>
+            <td>{{ answer or 'Not provided' }}</td>
+        </tr>
+        <tr>
+            <td>Rating:</td>
+            <td>{{ rating or 'Not rated' }}</td>
+        </tr>
+        <tr>
+            <td>Suggestions:</td>
+            <td>{{ suggestions or 'No suggestions' }}</td>
+        </tr>
+    </table>
+    <form action="/ranking" method="post">
+        <button name="action" value="Ask me another question from this module">Ask me another question from this module</button>
+        <button name="action" value="Go back to the curriculum">Go back to the curriculum</button>
+    </form>
+</body>
+
+</html>
+

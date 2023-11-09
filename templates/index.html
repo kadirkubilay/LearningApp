@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/css/style.css">
+    <title>Select Curriculum</title>
+</head>
+
+<body>
+    <div class="container">
+        <img src="/static/logo.png" alt="Logo" class="logo" />
+        <h2>Say hello to Grace!</h2>
+        <p>Grace is your personal learning assistant. Upload the curriculum or select a curriculum from the list to refresh your knowledge.</p>
+
+        <form action="/" method="post" class="curriculum-form">
+            <button class="upload-btn" disabled>Upload a PDF</button>
+            <div class="select-container">
+                <select name="curriculum" class="curriculum-select">
+                    <option value="Machine Learning by TUM">Machine Learning by TUM</option>
+                    <option value="Deep Learning by Capgemini" disabled>Deep Learning by Capgemini</option>
+                    <option value="Ethical AI by MIT" disabled>Ethical AI by MIT</option>
+                </select>
+                <input type="submit" value="Proceed" class="proceed-btn">
+            </div>
+        </form>
+    </div>
+</body>
+
+</html>
+
