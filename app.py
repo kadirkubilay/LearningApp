@@ -9,7 +9,8 @@ app = Flask(__name__)
 app.secret_key = 'KADOKUBIERDEM'
 
 
-openai.api_key = os.environ.get("OPENAI_API_KEY")
+openai.api_key = ""
+
 
 # Article content
 article = """
@@ -91,28 +92,32 @@ def medium():
     return render_template('medium.html')
 
 
-@app.route('/result', methods=['POST','GET'])
+@app.route('/result', methods=['POST', 'GET'])
 def result():
     answer = request.form.get('answer')
     question = session.get('question', 'No question available')
-    evaluation_prompt = (f"\n\n--RatingStart--\nRate the answer: '{answer}' for question '{question}' based on the article: '{article}' from  1 to 5 stars "
-                     f"\n--RatingEnd--\n"
-                     f"--SuggestionStart--\nSuggest a better answer than '{answer}' for question: '{question}' based on the article :{article}. "
-                     f"\n--SuggestionEnd--")
-    response = openai.ChatCompletion.create(
+
+    # Rating Prompt
+    rating_prompt = f"Rate the answer '{answer}' to the question '{question}' based on the article. Provide a rating from 1 to 5 stars."
+    rating_response = openai.ChatCompletion.create(
         model="gpt-3.5-turbo",
-        messages=[{"role": "user", "content": evaluation_prompt}],
-        temperature=0.2,
-        max_tokens=200
+        messages=[{"role": "user", "content": rating_prompt}],
+        temperature=0.7,
+        max_tokens=150
     )
-    response_text = response['choices'][0]['message']['content'].strip()
-    print("response_text")
-    response_text = response['choices'][0]['message']['content'].strip()
-    print("response_text")
+    rating = rating_response['choices'][0]['message']['content'].strip()
 
+    # Suggestion Prompt
+    suggestion_prompt = f"Suggest a better answer than '{answer}' for the question '{question}' based on the article."
+    suggestion_response = openai.ChatCompletion.create(
+        model="gpt-3.5-turbo",
+        messages=[{"role": "user", "content": suggestion_prompt}],
+        temperature=0.7,
+        max_tokens=150
+    )
+    suggestion = suggestion_response['choices'][0]['message']['content'].strip()
 
-    return render_template("ranking.html", answer=answer, rating=response_text[:7], suggestions=response_text[7:])
-
+    return render_template("ranking.html", answer=answer, rating=rating, suggestions=suggestion)
 
 
 
