@@ -97,8 +97,12 @@ def result():
     answer = request.form.get('answer')
     question = session.get('question', 'No question available')
 
-    # Rating Prompt
-    rating_prompt = f"Rate the answer '{answer}' to the question '{question}' based on the article. Provide a rating from 1 to 5 stars."
+    # Further Revised Rating Prompt with Specific Instruction
+    rating_prompt = (f"Assuming the role of a strict and detail-oriented examiner, evaluate the answer '{answer}' "
+                     f"to the question '{question}'. Assess if the answer specifically and accurately addresses the "
+                     f"question, considering the information in the article '{article}'. Assign a rating from 1 to 5 stars, "
+                     f"where 1 star means the answer is brief, vague, or incomplete, and 5 stars means it is highly "
+                     f"relevant, accurate, and complete. Give the star rating in the beginning of your response")
     rating_response = openai.ChatCompletion.create(
         model="gpt-3.5-turbo",
         messages=[{"role": "user", "content": rating_prompt}],
@@ -107,19 +111,17 @@ def result():
     )
     rating = rating_response['choices'][0]['message']['content'].strip()
 
-    # Suggestion Prompt
-    suggestion_prompt = f"Suggest a better answer than '{answer}' for the question '{question}' based on the article."
+    # Suggestion Prompt remains the same
+    suggestion_prompt = f"Suggest a better answer than '{answer}' for the question '{question}' based on the article '{article}'."
     suggestion_response = openai.ChatCompletion.create(
         model="gpt-3.5-turbo",
         messages=[{"role": "user", "content": suggestion_prompt}],
-        temperature=0.7,
+        temperature=0.1,
         max_tokens=150
     )
     suggestion = suggestion_response['choices'][0]['message']['content'].strip()
 
     return render_template("ranking.html", answer=answer, rating=rating, suggestions=suggestion)
-
-
 
 
 if __name__ == "__main__":
