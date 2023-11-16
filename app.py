@@ -8,8 +8,11 @@ import os
 app = Flask(__name__)
 app.secret_key = 'KADOKUBIERDEM'
 
-print("Setting API Key")
-openai.api_key = os.environ["OPENAI_API"]
+openai.api_key = os.environ["AZURE_OPENAI_KEY"]
+openai.api_base = os.environ["AZURE_OPENAI_ENDPOINT"]
+openai.api_type = 'azure'
+openai.api_version = '2023-06-01-preview'
+deployment_name= "HORST-GPT35"
 
 # Article content
 article = """
@@ -72,7 +75,7 @@ def medium():
 
 
         response = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo",
+            engine=deployment_name,
             messages=[{"role": "user", "content": prompt}],
             temperature=0.9,  # Use a higher temperature for more varied output
             max_tokens=200
@@ -103,7 +106,7 @@ def result():
                      f"where 1 star means the answer is brief, vague, or incomplete, and 5 stars means it is highly "
                      f"relevant, accurate, and complete. Give the star rating in the beginning of your response")
     rating_response = openai.ChatCompletion.create(
-        model="gpt-3.5-turbo",
+        engine=deployment_name,
         messages=[{"role": "user", "content": rating_prompt}],
         temperature=0.7,
         max_tokens=150
@@ -113,7 +116,7 @@ def result():
     # Suggestion Prompt remains the same
     suggestion_prompt = f"Suggest a better answer than '{answer}' for the question '{question}' based on the article '{article}'."
     suggestion_response = openai.ChatCompletion.create(
-        model="gpt-3.5-turbo",
+        engine=deployment_name,
         messages=[{"role": "user", "content": suggestion_prompt}],
         temperature=0.1,
         max_tokens=150
