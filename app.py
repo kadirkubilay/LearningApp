@@ -91,30 +91,36 @@ def medium():
     return render_template('medium.html')
 
 
-@app.route('/result', methods=['POST','GET'])
+@app.route('/result', methods=['POST', 'GET'])
 def result():
     answer = request.form.get('answer')
     question = session.get('question', 'No question available')
-    evaluation_prompt = (f"\n\n--RatingStart--\nRate the answer: '{answer}' for question '{question}' based on the article: '{article}' from  1 to 5 stars "
-                     f"\n--RatingEnd--\n"
-                     f"--SuggestionStart--\nSuggest a better answer than '{answer}' for question: '{question}' based on the article :{article}. "
-                     f"\n--SuggestionEnd--")
-    response = openai.ChatCompletion.create(
+
+    # Further Revised Rating Prompt with Specific Instruction
+    rating_prompt = (f"Assuming the role of a strict and detail-oriented examiner, evaluate the answer '{answer}' "
+                     f"to the question '{question}'. Assess if the answer specifically and accurately addresses the "
+                     f"question, considering the information in the article '{article}'. Assign a rating from 1 to 5 stars, "
+                     f"where 1 star means the answer is brief, vague, or incomplete, and 5 stars means it is highly "
+                     f"relevant, accurate, and complete. Give the star rating in the beginning of your response")
+    rating_response = openai.ChatCompletion.create(
         model="gpt-3.5-turbo",
-        messages=[{"role": "user", "content": evaluation_prompt}],
-        temperature=0.2,
-        max_tokens=200
+        messages=[{"role": "user", "content": rating_prompt}],
+        temperature=0.7,
+        max_tokens=150
     )
-    response_text = response['choices'][0]['message']['content'].strip()
-    print("response_text")
-    response_text = response['choices'][0]['message']['content'].strip()
-    print("response_text")
+    rating = rating_response['choices'][0]['message']['content'].strip()
 
+    # Suggestion Prompt remains the same
+    suggestion_prompt = f"Suggest a better answer than '{answer}' for the question '{question}' based on the article '{article}'."
+    suggestion_response = openai.ChatCompletion.create(
+        model="gpt-3.5-turbo",
+        messages=[{"role": "user", "content": suggestion_prompt}],
+        temperature=0.1,
+        max_tokens=150
+    )
+    suggestion = suggestion_response['choices'][0]['message']['content'].strip()
 
-    return render_template("ranking.html", answer=answer, rating=response_text[:7], suggestions=response_text[7:])
-
-
-
+    return render_template("ranking.html", answer=answer, rating=rating, suggestions=suggestion)
 
 
 if __name__ == "__main__":
