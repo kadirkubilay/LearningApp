@@ -1,5 +1,3 @@
-import logging
-
 from flask import Flask, render_template, request, redirect, url_for, session
 import openai
 import random
@@ -8,7 +6,7 @@ import os
 
 # Initialize the Flask application
 app = Flask(__name__)
-app.secret_key = 'KADOKUBIERDEM'
+app.secret_key = 'KADOKUBIERDEM-test'
 
 print("Setting API Key")
 test = os.environ["TEST_KEY"]
