@@ -77,9 +77,11 @@
             <td>{{ suggestions or 'No suggestions' }}</td>
         </tr>
     </table>
-    <form action="/ranking" method="post">
-        <button name="action" value="Ask me another question from this module">Ask me another question from this module</button>
-        <button name="action" value="Go back to the curriculum">Go back to the curriculum</button>
+    <form action="/medium" method="GET">
+        <button>Ask me another question from this module</button>
+    </form>
+    <form action="/" method="GET">
+        <button>Go back to the curriculum</button>
     </form>
 </body>
 
