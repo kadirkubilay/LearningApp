@@ -8,6 +8,7 @@ import os
 app = Flask(__name__)
 app.secret_key = 'KADOKUBIERDEM'
 
+# Setting openai variables
 openai.api_key = os.environ["AZURE_OPENAI_KEY"]
 openai.api_base = os.environ["AZURE_OPENAI_ENDPOINT"]
 openai.api_type = 'azure'
