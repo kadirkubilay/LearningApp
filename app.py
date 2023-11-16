@@ -1,3 +1,5 @@
+import logging
+
 from flask import Flask, render_template, request, redirect, url_for, session
 import openai
 import random
@@ -8,7 +10,8 @@ import os
 app = Flask(__name__)
 app.secret_key = 'KADOKUBIERDEM'
 
-
+print("Setting API Key")
+test = os.environ["TEST_KEY"]
 openai.api_key = os.environ["OPENAI_API"]
 
 # Article content
@@ -88,7 +91,7 @@ def medium():
         return render_template('result.html', question=question)
 
 
-    return render_template('medium.html')
+    return render_template('medium.html', message=test)
 
 
 @app.route('/result', methods=['POST', 'GET'])
